@@ -13,7 +13,7 @@ public class Trim {
 
     private  String newInformation;
 
-    private int level;
+    private String level;
 
     private String personName;
 
@@ -72,14 +72,14 @@ public class Trim {
         this.newInformation = newInformation.substring(0,newInformation.length()-1);
     }
 
-    public int getLevel() {
+
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(int level)  {
+    public void setLevel(String level) {
         this.level = level;
     }
-
 
     public City getCity() {
         return city;
@@ -130,7 +130,7 @@ public class Trim {
 
         String[] split = this.newInformation.split(regexLevel);
 
-        this.level = Integer.parseInt(split[0]);
+        this.level=split[0];
 
         personName = split[1];
 
@@ -254,13 +254,12 @@ public class Trim {
 
     private void trimStreet() {
 
-        if (this.level == 1) {
+        if (this.level.equals("1")) {
             person.setRestAddress(this.newInformation);
-        } else if (this.level == 2 || level == 3) {
+        } else if (this.level.equals("2") || level.equals("3")) {
             String regex1 = "(\\D+)(\\d+号)";
             Pattern pattern = Pattern.compile(regex1);
             Matcher matcher = pattern.matcher(newInformation);
-            //System.out.println(newInformation);
             String restAddress = null;
             if (matcher.find()) {
                 restAddress = matcher.replaceFirst("");
