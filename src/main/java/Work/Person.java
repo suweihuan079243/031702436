@@ -1,25 +1,32 @@
 package Work;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Person {
+    @JSONField(name = "姓名")
     private String name;
 
-    private String phone;
+    @JSONField(name = "手机")
+    private String phoneNumber;
 
-    private String address;
+    @JSONField(name = "地址")
+    private List<String> address=new ArrayList<>();
 
-    private String information;
 
-    private String province;
+    private transient String province;
 
-    private String city;
+    private transient String city;
 
-    private String county;
+    private transient String county;
 
-    private String town;
+    private transient String town;
 
-    private String street;
+    private transient String street;
 
-    private String restAddress;
+    private transient String restAddress;
 
     public String getProvince() {
         return province;
@@ -27,6 +34,11 @@ public class Person {
 
     public void setProvince(String province) {
         this.province = province;
+        if(province.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(province);
+        }
     }
 
     public String getCity() {
@@ -35,14 +47,33 @@ public class Person {
 
     public void setCity(String city) {
         this.city = city;
+        if(city.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(city);
+        }
     }
 
     public String getCounty() {
         return county;
     }
 
+    public List<String> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<String> address) {
+        this.address = address;
+    }
+
     public void setCounty(String county) {
         this.county = county;
+
+       if(county.equals("\"\"")){
+           address.add("");
+       }else{
+           address.add(county);
+       }
     }
 
     public String getTown() {
@@ -50,7 +81,11 @@ public class Person {
     }
 
     public void setTown(String town) {
-        this.town = town;
+        if(town.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(town);
+        }
     }
 
     public String getStreet() {
@@ -59,26 +94,15 @@ public class Person {
 
     public void setStreet(String street) {
         this.street = street;
+        if(street.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(street);
+        }
     }
 
     public String getRestAddress() {
         return restAddress;
-    }
-
-    public void setRestAddress(String restAddress) {
-        this.restAddress = restAddress;
-    }
-
-    public Person(String orign){
-        this.information=orign.substring(0,orign.length()-1);
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
     }
 
     public String getName() {
@@ -89,35 +113,38 @@ public class Person {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", information='" + information + '\'' +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", county='" + county + '\'' +
-                ", town='" + town + '\'' +
-                ", street='" + street + '\'' +
-                ", restAddress='" + restAddress + '\'' +
-                '}';
+
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setRoadName(String roadName) {
+        if(roadName.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(roadName);
+        }
     }
 
-    public String getAddress() {
-        return address;
+    public void setGateNumber(String gateNumber){
+        if(gateNumber.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(gateNumber);
+        }
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setRestAddress(String restAddress) {
+        this.restAddress = restAddress;
+        if(restAddress.equals("\"\"")){
+            address.add("");
+        }else{
+            address.add(restAddress);
+        }
     }
+
 }
