@@ -28,9 +28,6 @@ public class Person {
 
     private transient String restAddress;
 
-    public String getProvince() {
-        return province;
-    }
 
     public void setProvince(String province) {
         this.province = province;
@@ -41,9 +38,6 @@ public class Person {
         }
     }
 
-    public String getCity() {
-        return city;
-    }
 
     public void setCity(String city) {
         this.city = city;
@@ -54,17 +48,7 @@ public class Person {
         }
     }
 
-    public String getCounty() {
-        return county;
-    }
 
-    public List<String> getAddress() {
-        return address;
-    }
-
-    public void setAddress(List<String> address) {
-        this.address = address;
-    }
 
     public void setCounty(String county) {
         this.county = county;
@@ -76,9 +60,7 @@ public class Person {
        }
     }
 
-    public String getTown() {
-        return town;
-    }
+
 
     public void setTown(String town) {
         if(town.equals("\"\"")){
@@ -88,22 +70,10 @@ public class Person {
         }
     }
 
-    public String getStreet() {
-        return street;
-    }
 
-    public void setStreet(String street) {
-        this.street = street;
-        if(street.equals("\"\"")){
-            address.add("");
-        }else{
-            address.add(street);
-        }
-    }
 
-    public String getRestAddress() {
-        return restAddress;
-    }
+
+
 
     public String getName() {
         return name;
@@ -113,9 +83,6 @@ public class Person {
         this.name = name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 
 
     public void setPhoneNumber(String phone) {
@@ -136,6 +103,46 @@ public class Person {
         }else{
             address.add(gateNumber);
         }
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public List<String> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<String> address) {
+        this.address = address;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getRestAddress() {
+        return restAddress;
     }
 
     public void setRestAddress(String restAddress) {

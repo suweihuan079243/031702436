@@ -15,12 +15,13 @@ public class Province {
         return provinceName;
     }
 
-    public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName;
-    }
 
     public List<City> getCities() {
         return cities;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
     }
 
     public void setCities(List<City> cities) {

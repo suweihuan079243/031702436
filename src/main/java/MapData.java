@@ -1,12 +1,10 @@
 import Work.Province;
 import com.alibaba.fastjson.JSON;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class MapData {
@@ -14,20 +12,14 @@ public class MapData {
     private static List<Province> provinces;
 
     public static void readMap() throws IOException{
-        String filePath = "Address/mapData.json";
+        InputStream filePath = MapData.class.getResourceAsStream("mapData.json");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader
-                (new FileInputStream(filePath),"utf-8"));
-        //BufferedWriter bufferedWriter=new BufferedWriter(new FileWriter("map.txt"));
-        String line=null;
+                (filePath,"utf-8"));
+        String line;
         StringBuilder stringBuilder=new StringBuilder();
         while((line=bufferedReader.readLine())!=null){
             stringBuilder.append(line);
-//            bufferedWriter.write(line);
-//            bufferedWriter.newLine();
-//            bufferedWriter.flush();
         }
-        bufferedReader.close();
-       // bufferedWriter.close();
         bufferedReader.close();
         provinces= JSON.parseArray(stringBuilder.toString(),Province.class);
     }
