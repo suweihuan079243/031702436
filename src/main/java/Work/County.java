@@ -10,7 +10,7 @@ public class County {
     private String countyName;
 
     @JSONField(name = "children")
-    List<Town>towns;
+    List<Town> towns;
 
     public String getCountyName() {
         return countyName;

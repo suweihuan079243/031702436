@@ -8,8 +8,8 @@ public class Province {
     @JSONField(name = "name")
     String provinceName;
 
-    @JSONField(name ="children")
-    private List<City>cities;
+    @JSONField(name = "children")
+    private List<City> cities;
 
     public String getProvinceName() {
         return provinceName;

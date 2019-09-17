@@ -7,11 +7,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Trim {
-    private  Person person;
+    private Person person;
 
     private String phoneNumber;
 
-    private  String newInformation;
+    private String newInformation;
 
     private String level;
 
@@ -27,8 +27,8 @@ public class Trim {
 
     private Street street;
 
-    public Trim(){
-        this.person=new Person();
+    public Trim() {
+        this.person = new Person();
     }
 
     public void setPerson(Person person) {
@@ -69,7 +69,7 @@ public class Trim {
     }
 
     public void setNewInformation(String newInformation) {
-        this.newInformation = newInformation.substring(0,newInformation.length()-1);
+        this.newInformation = newInformation.substring(0, newInformation.length() - 1);
     }
 
 
@@ -113,14 +113,14 @@ public class Trim {
         this.street = street;
     }
 
-
     public void trimPhoneNumber() {
         String regexPhone = "\\d{11}";
         Pattern pattern = Pattern.compile(regexPhone);
         Matcher matcher = pattern.matcher(this.newInformation);
         if (matcher.find()) {
-            this.phoneNumber=matcher.group();
+            this.phoneNumber = matcher.group();
         }
+        person.setPhoneNumber(this.phoneNumber);
         this.newInformation = matcher.replaceAll("").trim();
     }
 
@@ -130,11 +130,12 @@ public class Trim {
 
         String[] split = this.newInformation.split(regexLevel);
 
-        this.level=split[0];
+        this.level = split[0];
 
         personName = split[1];
 
         this.newInformation = split[2];
+        person.setName(this.personName);
     }
 
     public void trimProvince() {
@@ -143,28 +144,26 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        person.setName(this.personName);
-        person.setPhoneNumber(this.phoneNumber);
         String provinceInformation = this.newInformation.substring(0, 2);
-        List<Province>provinceList=MapData.getProvinces();
-        for (Province province :provinceList) {
+        List<Province> provinceList = MapData.getProvinces();
+        for (Province province : provinceList) {
             String provinceName = province.getProvinceName().substring(0, 2);
             if (provinceInformation.equals(provinceName)) {
                 if (provinceName.equals("北京") || provinceName.equals("重庆") ||
-                        provinceName.equals("天津") ||provinceName.equals("上海")){
+                        provinceName.equals("天津") || provinceName.equals("上海")) {
                 } else {
                     this.newInformation = trimInformation(this.newInformation, province.getProvinceName());
                 }
                 person.setProvince(province.getProvinceName());
-                this.province=province;
+                this.province = province;
                 break;
             }
         }
-        if(province!=null)
+        if (province != null)
             trimCity(this.province);
     }
 
-    public void trimCity(Province province){
+    public void trimCity(Province province) {
         try {
             MapData.readMap();
         } catch (IOException e) {
@@ -172,24 +171,24 @@ public class Trim {
         }
 
         String cityInformation = this.newInformation.substring(0, 2);
-        String cityName=null;
-        for(City city:province.getCities()){
-            cityName=city.getCityName().substring(0,2);
+        String cityName = null;
+        for (City city : province.getCities()) {
+            cityName = city.getCityName().substring(0, 2);
 
-            if(cityInformation.equals(cityName)){
+            if (cityInformation.equals(cityName)) {
                 this.newInformation = trimInformation(this.newInformation, city.getCityName());
-                this.city=city;
+                this.city = city;
                 person.setCity(city.getCityName());
                 break;
             }
         }
-        if(this.city!=null){
+        if (this.city != null) {
             trimCounty(this.city);
-        }else{
+        } else {
             person.setCity("\"\"");
-            if(this.province!=null){
+            if (this.province != null) {
                 List<City> cityList = this.province.getCities();
-                for(City city:cityList){
+                for (City city : cityList) {
                     trimCounty(city);
                 }
             }
@@ -204,24 +203,24 @@ public class Trim {
         }
         String couontyInformation = this.newInformation.substring(0, 2);//
 
-        String countyName=null;
+        String countyName = null;
 
-        for(County county:city.getCounties()){
-            countyName=county.getCountyName().substring(0,2);
-            if(couontyInformation.equals(countyName)){
-                this.newInformation = trimInformation(this.newInformation,county.getCountyName());
-                this.county=county;
+        for (County county : city.getCounties()) {
+            countyName = county.getCountyName().substring(0, 2);
+            if (couontyInformation.equals(countyName)) {
+                this.newInformation = trimInformation(this.newInformation, county.getCountyName());
+                this.county = county;
                 person.setCounty(county.getCountyName());
                 break;
             }
         }
-        if(this.county!=null){
+        if (this.county != null) {
             trimTown(this.county);
-        }else{
+        } else {
             person.setCounty("\"\"");
-            if(this.city!=null){
+            if (this.city != null) {
                 List<County> countyList = this.city.getCounties();
-                for(County county:countyList){
+                for (County county : countyList) {
                     trimTown(county);
                 }
             }
@@ -236,20 +235,20 @@ public class Trim {
         }
         String townInformation = this.newInformation.substring(0, 2);//
 
-        String townName=null;
-        for(Town town:county.getTowns()){
-            townName=town.getTownName().substring(0,2);
-            if(townInformation.equals(townName)){
+        String townName = null;
+        for (Town town : county.getTowns()) {
+            townName = town.getTownName().substring(0, 2);
+            if (townInformation.equals(townName)) {
                 this.newInformation = trimInformation(this.newInformation, town.getTownName());
-                this.town=town;
+                this.town = town;
                 person.setTown(town.getTownName());
                 break;
             }
         }
-            if(this.town==null){
-                person.setTown("\"\"");
-            }
-            trimStreet();
+        if (this.town == null) {
+            person.setTown("\"\"");
+        }
+        trimStreet();
     }
 
     private void trimStreet() {
@@ -273,19 +272,19 @@ public class Trim {
                     gateNumber = matcher1.group(0);
                     roadName = matcher1.replaceAll("");
                 }
-                if(roadName!=null){
+                if (roadName != null) {
                     person.setRoadName(roadName);
-                }else {
+                } else {
                     person.setRoadName("\"\"");
                 }
-                if(gateNumber!=null){
+                if (gateNumber != null) {
                     person.setGateNumber(gateNumber);
-                }else{
+                } else {
                     person.setGateNumber("\"\"");
                 }
-                if(restAddress!=null){
+                if (restAddress != null) {
                     person.setRestAddress(restAddress);
-                }else{
+                } else {
                     person.setRestAddress("\"\"");
                 }
             }
@@ -293,19 +292,19 @@ public class Trim {
     }
 
 
-
     public String trimInformation(String information, String Name) {
-        int length=Math.min(information.length(), Name.length());
-        int index=length;
-        for(int i=0;i<length;i++){
-            if(information.charAt(i)!=Name.charAt(i)){
-                index=i;
+        int length = Math.min(information.length(), Name.length());
+        int index = length;
+        for (int i = 0; i < length; i++) {
+            if (information.charAt(i) != Name.charAt(i)) {
+                index = i;
                 break;
             }
         }
         return information.substring(index);
     }
-    public String sout(){
+
+    public String sout() {
         return JSON.toJSONString(person);
     }
 

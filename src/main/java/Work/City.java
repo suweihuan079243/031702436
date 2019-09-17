@@ -9,8 +9,8 @@ public class City {
     @JSONField(name = "name")
     private String cityName;
 
-    @JSONField(name ="children")
-    List<County>counties;
+    @JSONField(name = "children")
+    List<County> counties;
 
     public String getCityName() {
         return cityName;

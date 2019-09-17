@@ -13,7 +13,7 @@ public class Person {
     private String phoneNumber;
 
     @JSONField(name = "地址")
-    private List<String> address=new ArrayList<>();
+    private List<String> address = new ArrayList<>();
 
 
     private transient String province;
@@ -31,9 +31,9 @@ public class Person {
 
     public void setProvince(String province) {
         this.province = province;
-        if(province.equals("\"\"")){
+        if (province.equals("\"\"")) {
             address.add("");
-        }else{
+        } else {
             address.add(province);
         }
     }
@@ -41,39 +41,32 @@ public class Person {
 
     public void setCity(String city) {
         this.city = city;
-        if(city.equals("\"\"")){
+        if (city.equals("\"\"")) {
             address.add("");
-        }else{
+        } else {
             address.add(city);
         }
     }
 
 
-
     public void setCounty(String county) {
         this.county = county;
 
-       if(county.equals("\"\"")){
-           address.add("");
-       }else{
-           address.add(county);
-       }
-    }
-
-
-
-    public void setTown(String town) {
-        if(town.equals("\"\"")){
+        if (county.equals("\"\"")) {
             address.add("");
-        }else{
-            address.add(town);
+        } else {
+            address.add(county);
         }
     }
 
 
-
-
-
+    public void setTown(String town) {
+        if (town.equals("\"\"")) {
+            address.add("");
+        } else {
+            address.add(town);
+        }
+    }
 
     public String getName() {
         return name;
@@ -84,23 +77,22 @@ public class Person {
     }
 
 
-
     public void setPhoneNumber(String phone) {
         this.phoneNumber = phone;
     }
 
     public void setRoadName(String roadName) {
-        if(roadName.equals("\"\"")){
+        if (roadName.equals("\"\"")) {
             address.add("");
-        }else{
+        } else {
             address.add(roadName);
         }
     }
 
-    public void setGateNumber(String gateNumber){
-        if(gateNumber.equals("\"\"")){
+    public void setGateNumber(String gateNumber) {
+        if (gateNumber.equals("\"\"")) {
             address.add("");
-        }else{
+        } else {
             address.add(gateNumber);
         }
     }
@@ -147,9 +139,9 @@ public class Person {
 
     public void setRestAddress(String restAddress) {
         this.restAddress = restAddress;
-        if(restAddress.equals("\"\"")){
+        if (restAddress.equals("\"\"")) {
             address.add("");
-        }else{
+        } else {
             address.add(restAddress);
         }
     }
