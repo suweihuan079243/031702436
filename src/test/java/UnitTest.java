@@ -4,7 +4,7 @@ public class UnitTest {
 
     @Test
     public void testMain(){
-        String[] strings = new String[]{"in.txt","out.txt"};
+        String[] strings = new String[]{"in.txt","out.json"};
         Main.main(strings);
     }
 
