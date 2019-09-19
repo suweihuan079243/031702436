@@ -10,20 +10,23 @@ public class Main {
     public static void main(String[] args) {
         BufferedReader bufferedReader = null;
         BufferedWriter bufferedWriter = null;
+        List<Person> persons =null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader
                     (new FileInputStream(args[0]), "utf-8"));
             bufferedWriter = new BufferedWriter(new OutputStreamWriter
                     (new FileOutputStream(args[1]), StandardCharsets.UTF_8));
             String line;
-            List<Person> persons = new ArrayList<>();
+            persons = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
                 Trim trim = new Trim();
+                Person person=new Person();
                 trim.setNewInformation(line);
                 trim.trimPhoneNumber();
                 trim.trimLevel();
                 trim.trimProvince();
-                persons.add(trim.getPerson());
+                person=trim.getPerson();
+                persons.add(person);
             }
             bufferedWriter.write(JSON.toJSONString(persons));
             bufferedWriter.newLine();
@@ -42,5 +45,6 @@ public class Main {
                 e.printStackTrace();
             }
         }
+
     }
 }

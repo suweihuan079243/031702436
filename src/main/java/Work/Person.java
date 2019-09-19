@@ -15,56 +15,59 @@ public class Person {
     @JSONField(name = "地址")
     private List<String> address = new ArrayList<>();
 
+    private transient Province province;
 
-    private transient String province;
+    private transient City city;
 
-    private transient String city;
+    private transient County county;
 
-    private transient String county;
+    private transient Town town;
 
-    private transient String town;
-
-    private transient String street;
+    private transient Street street;
 
     private transient String restAddress;
 
 
-    public void setProvince(String province) {
-        this.province = province;
-        if (province.equals("\"\"")) {
+    public void setProvince(Province province) {
+       if(province!=null){
+           address.add(province.getProvinceName());
+       }else{
+           address.add("");
+       }
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address=" + address +
+                '}';
+    }
+
+    public void setCity(City city) {
+        if(city!=null){
+            address.add(city.getCityName());
+        }else{
             address.add("");
-        } else {
-            address.add(province);
         }
     }
 
 
-    public void setCity(String city) {
-        this.city = city;
-        if (city.equals("\"\"")) {
-            address.add("");
-        } else {
-            address.add(city);
-        }
+    public void setCounty(County county) {
+     if(county!=null){
+         address.add(county.getCountyName());
+     }else{
+         address.add("");
+     }
     }
 
 
-    public void setCounty(String county) {
-        this.county = county;
-
-        if (county.equals("\"\"")) {
+    public void setTown(Town town) {
+        if(town!=null){
+            address.add(town.getTownName());
+        }else{
             address.add("");
-        } else {
-            address.add(county);
-        }
-    }
-
-
-    public void setTown(String town) {
-        if (town.equals("\"\"")) {
-            address.add("");
-        } else {
-            address.add(town);
         }
     }
 
@@ -82,17 +85,17 @@ public class Person {
     }
 
     public void setRoadName(String roadName) {
-        if (roadName.equals("\"\"")) {
-            address.add("");
-        } else {
-            address.add(roadName);
-        }
+      if(roadName==null){
+          address.add("");
+      }else{
+          address.add(roadName);
+      }
     }
 
     public void setGateNumber(String gateNumber) {
-        if (gateNumber.equals("\"\"")) {
+        if(gateNumber==null){
             address.add("");
-        } else {
+        }else{
             address.add(gateNumber);
         }
     }
@@ -109,41 +112,39 @@ public class Person {
         this.address = address;
     }
 
-    public String getProvince() {
-        return province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public String getTown() {
-        return town;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
 
     public String getRestAddress() {
         return restAddress;
     }
 
     public void setRestAddress(String restAddress) {
-        this.restAddress = restAddress;
-        if (restAddress.equals("\"\"")) {
-            address.add("");
-        } else {
+        if(restAddress!=null){
             address.add(restAddress);
+        }else{
+            address.add("");
         }
     }
+    public Province getProvince() {
+        return province;
+    }
 
+    public City getCity() {
+        return city;
+    }
+
+    public County getCounty() {
+        return county;
+    }
+
+    public Town getTown() {
+        return town;
+    }
+
+    public Street getStreet() {
+        return street;
+    }
+
+    public void setStreet(Street street) {
+        this.street = street;
+    }
 }

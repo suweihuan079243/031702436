@@ -2,13 +2,12 @@ import Work.*;
 import com.alibaba.fastjson.JSON;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Trim {
-    private Person person;
-
     private String phoneNumber;
 
     private String newInformation;
@@ -27,13 +26,9 @@ public class Trim {
 
     private Street street;
 
-    public Trim() {
-        this.person = new Person();
-    }
+    private List<String>address=new ArrayList<>();
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -60,7 +55,11 @@ public class Trim {
     }
 
     public Person getPerson() {
-        return this.person;
+        Person person=new Person();
+        person.setName(personName);
+        person.setPhoneNumber(phoneNumber);
+        person.setAddress(address);
+        return person;
     }
 
 
@@ -114,13 +113,12 @@ public class Trim {
     }
 
     public void trimPhoneNumber() {
-        String regexPhone = "\\d{11}";
+        String regexPhone = "\\d{11,}";
         Pattern pattern = Pattern.compile(regexPhone);
         Matcher matcher = pattern.matcher(this.newInformation);
         if (matcher.find()) {
             this.phoneNumber = matcher.group();
         }
-        person.setPhoneNumber(this.phoneNumber);
         this.newInformation = matcher.replaceAll("").trim();
     }
 
@@ -135,7 +133,6 @@ public class Trim {
         personName = split[1];
 
         this.newInformation = split[2];
-        person.setName(this.personName);
     }
 
     public void trimProvince() {
@@ -151,15 +148,16 @@ public class Trim {
             if (provinceInformation.equals(provinceName)) {
                 if (provinceName.equals("北京") || provinceName.equals("重庆") ||
                         provinceName.equals("天津") || provinceName.equals("上海")) {
+                    this.newInformation=provinceName+this.newInformation;
+                    this.newInformation = trimInformation(this.newInformation, province.getProvinceName());
                 } else {
                     this.newInformation = trimInformation(this.newInformation, province.getProvinceName());
                 }
-                person.setProvince(province.getProvinceName());
                 this.province = province;
                 break;
             }
         }
-        if (province != null)
+            address.add(province.getProvinceName());
             trimCity(this.province);
     }
 
@@ -174,22 +172,24 @@ public class Trim {
         String cityName = null;
         for (City city : province.getCities()) {
             cityName = city.getCityName().substring(0, 2);
-
             if (cityInformation.equals(cityName)) {
                 this.newInformation = trimInformation(this.newInformation, city.getCityName());
                 this.city = city;
-                person.setCity(city.getCityName());
                 break;
             }
         }
         if (this.city != null) {
+            address.add(city.getCityName());
             trimCounty(this.city);
         } else {
-            person.setCity("\"\"");
+            address.add("");
             if (this.province != null) {
                 List<City> cityList = this.province.getCities();
                 for (City city : cityList) {
                     trimCounty(city);
+                    if(this.county!=null){
+                        break;
+                    }
                 }
             }
         }
@@ -210,18 +210,21 @@ public class Trim {
             if (couontyInformation.equals(countyName)) {
                 this.newInformation = trimInformation(this.newInformation, county.getCountyName());
                 this.county = county;
-                person.setCounty(county.getCountyName());
                 break;
             }
         }
         if (this.county != null) {
+            address.add(this.county.getCountyName());
             trimTown(this.county);
         } else {
-            person.setCounty("\"\"");
+            address.add("");
             if (this.city != null) {
                 List<County> countyList = this.city.getCounties();
                 for (County county : countyList) {
                     trimTown(county);
+                    if(this.town!=null) {
+                        break;
+                    }
                 }
             }
         }
@@ -233,60 +236,71 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String townInformation = this.newInformation.substring(0, 2);//
-
-        String townName = null;
-        for (Town town : county.getTowns()) {
-            townName = town.getTownName().substring(0, 2);
-            if (townInformation.equals(townName)) {
-                this.newInformation = trimInformation(this.newInformation, town.getTownName());
-                this.town = town;
-                person.setTown(town.getTownName());
-                break;
+            String townInformation = this.newInformation.substring(0, 2);
+            String townName = null;
+            for (Town town : county.getTowns()) {
+                townName = town.getTownName().substring(0, 2);
+                if (townInformation.equals(townName)) {
+                    this.newInformation = trimInformation(this.newInformation, town.getTownName());
+                    this.town = town;
+                    break;
+                }
             }
-        }
-        if (this.town == null) {
-            person.setTown("\"\"");
+        if (this.town != null) {
+            address.add(town.getTownName());
+        }else {
+            address.add("");
         }
         trimStreet();
     }
 
-    private void trimStreet() {
+    public List<String> getAddress() {
+        return address;
+    }
 
-        if (this.level.equals("1")) {
-            person.setRestAddress(this.newInformation);
-        } else if (this.level.equals("2") || level.equals("3")) {
-            String regex1 = "(\\D+)(\\d+号)";
-            Pattern pattern = Pattern.compile(regex1);
-            Matcher matcher = pattern.matcher(newInformation);
-            String restAddress = null;
-            if (matcher.find()) {
-                restAddress = matcher.replaceFirst("");
-                this.newInformation = matcher.group();
-                String regex2 = "\\d+号";
-                String gateNumber = null;
-                String roadName = null;
-                Pattern pattern1 = Pattern.compile(regex2);
-                Matcher matcher1 = pattern1.matcher(this.newInformation);
-                if (matcher1.find()) {
-                    gateNumber = matcher1.group(0);
-                    roadName = matcher1.replaceAll("");
-                }
-                if (roadName != null) {
-                    person.setRoadName(roadName);
-                } else {
-                    person.setRoadName("\"\"");
-                }
-                if (gateNumber != null) {
-                    person.setGateNumber(gateNumber);
-                } else {
-                    person.setGateNumber("\"\"");
-                }
-                if (restAddress != null) {
-                    person.setRestAddress(restAddress);
-                } else {
-                    person.setRestAddress("\"\"");
-                }
+    public void setAddress(List<String> address) {
+        this.address = address;
+    }
+
+    private void trimStreet() {
+        if (this.level.contains("1")&&(this.newInformation.length()>0)) {
+            address.add(this.newInformation);
+        }else if(this.level.contains("1")&&(this.newInformation.length()<=0)){
+            address.add("");
+        } else if ((this.level.contains("2") || level.contains("3"))) {
+            //只有路名和详细地址
+            //只有详细地址
+            //只有路名和门牌号
+            //只有路名
+            //只有门牌号
+           // System.out.println(this.newInformation);
+            String roadName="";
+            String gateNumber="";
+            String restAddress="";
+            String regexRoadName="(.*[路道街巷里])";
+            Pattern pattern=Pattern.compile(regexRoadName);
+            Matcher matcher=pattern.matcher(this.newInformation);
+            if(matcher.find()){
+                roadName=matcher.group();
+               // System.out.println(roadName);
+                this.newInformation=trimInformation(this.newInformation, roadName);
+            }
+            String regexGateNumber="(\\d+号)";
+            pattern=Pattern.compile(regexGateNumber);
+            matcher=pattern.matcher(this.newInformation);
+            if(matcher.find()){
+                gateNumber=matcher.group();
+                //System.out.println(gateNumber);
+                this.newInformation=trimInformation(this.newInformation, gateNumber);
+                restAddress=this.newInformation;
+                //System.out.println(restAddress);
+            }
+            address.add(roadName);
+            address.add(gateNumber);
+            if(this.newInformation.length()==0){
+                address.add("");
+            }else{
+                address.add(restAddress);
             }
         }
     }
@@ -302,10 +316,11 @@ public class Trim {
             }
         }
         return information.substring(index);
+
     }
 
-    public String sout() {
-        return JSON.toJSONString(person);
+    public void sout() {
+        System.out.println(address);
     }
 
 }
