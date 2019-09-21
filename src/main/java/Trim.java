@@ -141,6 +141,8 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         String provinceInformation = this.newInformation.substring(0, 2);
         List<Province> provinceList = MapData.getProvinces();
         for (Province province : provinceList) {
@@ -157,18 +159,19 @@ public class Trim {
                 break;
             }
         }
-         if(this.province==null){
-             address.add("");
-             for(Province province:provinceList){
-                 trimCity(province);
-                 if(this.city!=null){
-                     break;
-                 }
-             }
-         }else{
-             address.add(this.province.getProvinceName());
-             trimCity(this.province);
-         }
+          if (this.province != null) {
+            address.add(province.getProvinceName());
+            trimCity(this.province);
+        } else {
+            address.add("");
+                List<Province> provinceList1 = MapData.getProvinces();
+                for (Province province : provinceList1) {
+                    trimCity(province);
+                    if (this.city != null) {
+                        break;
+                    }
+                }
+        }
     }
 
     public void trimCity(Province province) {
@@ -188,18 +191,22 @@ public class Trim {
         String cityName = null;
         if(cityInformation!=null){
             for (City city : province.getCities()) {
-                cityName = city.getCityName().substring(0, 2);
+                try{
+                    cityName = city.getCityName().substring(0, 2);
 
+                }catch (StringIndexOutOfBoundsException e){
+                    cityName = city.getCityName().substring(0, 1);
+                }
                 if (cityInformation.equals(cityName)) {
                     this.newInformation = trimInformation(this.newInformation, city.getCityName());
                     this.city = city;
+                    address.add(city.getCityName());
                     break;
                 }
             }
         }
 
         if (this.city != null) {
-            address.add(city.getCityName());
             trimCounty(this.city);
         } else {
             address.add("");
@@ -221,6 +228,8 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         String countyInformation =null;
         try{
              countyInformation = this.newInformation.substring(0, 2);
@@ -231,17 +240,21 @@ public class Trim {
         String countyName = null;
         if(countyInformation!=null){
             for (County county : city.getCounties()) {
-                countyName = county.getCountyName().substring(0, 2);
+                try{
+                    countyName = county.getCountyName().substring(0, 2);
+                }catch (StringIndexOutOfBoundsException e){
+                    countyName = county.getCountyName().substring(0, 1);
+                }
                 if (countyInformation.equals(countyName)) {
                     this.newInformation = trimInformation(this.newInformation, county.getCountyName());
                     this.county = county;
+                    address.add(this.county.getCountyName());
                     break;
                 }
             }
         }
 
         if (this.county != null) {
-            address.add(this.county.getCountyName());
             trimTown(this.county);
         } else {
             address.add("");
@@ -273,13 +286,17 @@ public class Trim {
         if(townInformation!=null){
             String townName = null;
             for (Town town : county.getTowns()) {
-                townName = town.getTownName().substring(0, 2);
-                if (townInformation.equals(townName)) {
-                    this.newInformation = trimInformation(this.newInformation, town.getTownName());
-                    this.town = town;
-                    break;
+                try{
+                    townName = town.getTownName().substring(0, 2);
+                } catch (StringIndexOutOfBoundsException e){
+                    townName=town.getTownName().substring(0, 1);
                 }
+                if (townInformation.equals(townName)) {
+                this.newInformation = trimInformation(this.newInformation, town.getTownName());
+                this.town = town;
+                break;
             }
+                  }
         }
 
         if (this.town != null) {
