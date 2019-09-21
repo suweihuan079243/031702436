@@ -157,8 +157,18 @@ public class Trim {
                 break;
             }
         }
-            address.add(province.getProvinceName());
-            trimCity(this.province);
+         if(this.province==null){
+             address.add("");
+             for(Province province:provinceList){
+                 trimCity(province);
+                 if(this.city!=null){
+                     break;
+                 }
+             }
+         }else{
+             address.add(this.province.getProvinceName());
+             trimCity(this.province);
+         }
     }
 
     public void trimCity(Province province) {
@@ -168,16 +178,26 @@ public class Trim {
             e.printStackTrace();
         }
 
-        String cityInformation = this.newInformation.substring(0, 2);
+        String cityInformation =null;
+        try{
+            cityInformation = this.newInformation.substring(0, 2);
+        }catch (StringIndexOutOfBoundsException e){
+            this.city=null;
+        }
+
         String cityName = null;
-        for (City city : province.getCities()) {
-            cityName = city.getCityName().substring(0, 2);
-            if (cityInformation.equals(cityName)) {
-                this.newInformation = trimInformation(this.newInformation, city.getCityName());
-                this.city = city;
-                break;
+        if(cityInformation!=null){
+            for (City city : province.getCities()) {
+                cityName = city.getCityName().substring(0, 2);
+
+                if (cityInformation.equals(cityName)) {
+                    this.newInformation = trimInformation(this.newInformation, city.getCityName());
+                    this.city = city;
+                    break;
+                }
             }
         }
+
         if (this.city != null) {
             address.add(city.getCityName());
             trimCounty(this.city);
@@ -201,18 +221,25 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String couontyInformation = this.newInformation.substring(0, 2);//
+        String countyInformation =null;
+        try{
+             countyInformation = this.newInformation.substring(0, 2);
+        }catch (StringIndexOutOfBoundsException e){
+            this.county=null;
+        }
 
         String countyName = null;
-
-        for (County county : city.getCounties()) {
-            countyName = county.getCountyName().substring(0, 2);
-            if (couontyInformation.equals(countyName)) {
-                this.newInformation = trimInformation(this.newInformation, county.getCountyName());
-                this.county = county;
-                break;
+        if(countyInformation!=null){
+            for (County county : city.getCounties()) {
+                countyName = county.getCountyName().substring(0, 2);
+                if (countyInformation.equals(countyName)) {
+                    this.newInformation = trimInformation(this.newInformation, county.getCountyName());
+                    this.county = county;
+                    break;
+                }
             }
         }
+
         if (this.county != null) {
             address.add(this.county.getCountyName());
             trimTown(this.county);
@@ -236,7 +263,14 @@ public class Trim {
         } catch (IOException e) {
             e.printStackTrace();
         }
-            String townInformation = this.newInformation.substring(0, 2);
+        String townInformation =null;
+        try{
+                townInformation = this.newInformation.substring(0, 2);
+            }catch (StringIndexOutOfBoundsException e){
+                this.town=null;
+            }
+
+        if(townInformation!=null){
             String townName = null;
             for (Town town : county.getTowns()) {
                 townName = town.getTownName().substring(0, 2);
@@ -246,6 +280,8 @@ public class Trim {
                     break;
                 }
             }
+        }
+
         if (this.town != null) {
             address.add(town.getTownName());
         }else {
